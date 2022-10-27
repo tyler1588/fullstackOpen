@@ -4,10 +4,17 @@ const Course = ({ course }) => {
       {part.name} {part.exercises}
     </p>
   ));
+  let sum = 0;
+  course.parts.forEach((part) => {
+    sum += part.exercises;
+  });
   return (
     <div>
       <h1>{course.name}</h1>
       <div>{parts}</div>
+      <p>
+        <strong>total of exercises {sum}</strong>
+      </p>
     </div>
   );
 };
