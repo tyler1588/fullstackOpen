@@ -4,10 +4,9 @@ const Course = ({ course }) => {
       {part.name} {part.exercises}
     </p>
   ));
-  let sum = 0;
-  course.parts.forEach((part) => {
-    sum += part.exercises;
-  });
+  const sum = course.parts.reduce((accumulator, current) => {
+    return accumulator + current.exercises;
+  }, 0);
   return (
     <div>
       <h1>{course.name}</h1>
