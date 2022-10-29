@@ -3,9 +3,11 @@ import { useState } from 'react';
 const App = () => {
   const [persons, setPersons] = useState([
     { id: 0, name: 'Arto Hellas', number: '555-555-5555' },
+    { id: 1, name: 'Jake Paul', number: '666-666-6666' },
   ]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
+  const [filter, setFilter] = useState('');
 
   const addToArray = (personObject) => {
     for (let i = 0; i < persons.length; i++) {
@@ -37,9 +39,17 @@ const App = () => {
     setNewNumber(event.target.value);
   };
 
+  const handleFilterChange = (event) => {
+    setFilter(event.target.value.toLowerCase());
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
+      <div>
+        filter: <input value={filter} onChange={handleFilterChange} />
+      </div>
+      <h2>Add new</h2>
       <form onSubmit={handleSubmit}>
         <div>
           name: <input value={newName} onChange={handleNameChange} />
@@ -53,11 +63,13 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       <ul>
-        {persons.map((person) => (
-          <li key={person.id}>
-            {person.name} {person.number}
-          </li>
-        ))}
+        {persons
+          .filter((person) => person.name.toLowerCase().includes(filter))
+          .map((person) => (
+            <li key={person.id}>
+              {person.name} {person.number}
+            </li>
+          ))}
       </ul>
     </div>
   );
