@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import CountryDetail from "./components/CountryDetail";
 
 function App() {
   // initialize state
@@ -10,7 +11,11 @@ function App() {
   // get countries from API
   useEffect(() => {
     axios.get(endpoint).then((res) => {
-      const map = res.data.map((country) => country);
+      const map = res.data.map((country, i) => ({
+        data: country,
+        isVisible: false,
+        id: i,
+      }));
       setCountries(map);
     });
   }, []);
@@ -20,9 +25,21 @@ function App() {
     setInput(event.target.value);
   }
 
+  // handle country button click
+
+  const handleCountryClick = (event) => {
+    setCountries(
+      countries.map((country) =>
+        country.id === parseInt(event.target.className)
+          ? { ...country, isVisible: !country.isVisible }
+          : country
+      )
+    );
+  };
+
   // filter array according to input
   const filtered = countries.filter((country) =>
-    country.name.common.toLowerCase().includes(input.toLowerCase())
+    country.data.name.common.toLowerCase().includes(input.toLowerCase())
   );
 
   // create a function to conditionally return filtered countryies
@@ -37,27 +54,22 @@ function App() {
     // return a list of countries if there is between 1 and 10
     else if (filtered.length > 1) {
       output = filtered.map((country, i) => (
-        <p key={i}>{country.name.common}</p>
+        <div key={i} style={{ display: "flex", alignItems: "center" }}>
+          {CountryDetail(country)}
+          <button
+            style={{ height: "20px" }}
+            className={country.id}
+            onClick={(event) => handleCountryClick(event)}
+          >
+            {country.isVisible ? "Hide Detail" : "Show Detail"}
+          </button>
+        </div>
       ));
     }
     // return detailed information if there is only 1 country
     else if (filtered.length === 1) {
-      const singleCountry = filtered[0];
-      const languages = Object.values(singleCountry.languages);
-      output = (
-        <div>
-          <h1>{singleCountry.name.common}</h1>
-          <p>Capital: {singleCountry.capital[0]}</p>
-          <p>Area: {singleCountry.area}</p>
-          <h2>Languages:</h2>
-          <ul>
-            {languages.map((language, i) => {
-              return <li key={i}>{language}</li>;
-            })}
-          </ul>
-          <img src={singleCountry.flags.svg} alt="flag" height="100px"></img>
-        </div>
-      );
+      const singleCountry = filtered[0].data;
+      output = CountryDetail(singleCountry);
     }
     // no results from search
     else {
@@ -68,7 +80,7 @@ function App() {
 
   return (
     <div className="App">
-      <p>find countries</p>
+      <p>Find Countries</p>
       <input type="text" value={input} onChange={handleChange} />
       {countryList()}
     </div>
