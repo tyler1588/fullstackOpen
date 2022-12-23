@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import CountryDetail from "./components/CountryDetail";
 
 function App() {
   // initialize state
@@ -37,27 +38,16 @@ function App() {
     // return a list of countries if there is between 1 and 10
     else if (filtered.length > 1) {
       output = filtered.map((country, i) => (
-        <p key={i}>{country.name.common}</p>
+        <div key={i}>
+          <p>{country.name.common}</p>
+          <button>show detail</button>
+        </div>
       ));
     }
     // return detailed information if there is only 1 country
     else if (filtered.length === 1) {
       const singleCountry = filtered[0];
-      const languages = Object.values(singleCountry.languages);
-      output = (
-        <div>
-          <h1>{singleCountry.name.common}</h1>
-          <p>Capital: {singleCountry.capital[0]}</p>
-          <p>Area: {singleCountry.area}</p>
-          <h2>Languages:</h2>
-          <ul>
-            {languages.map((language, i) => {
-              return <li key={i}>{language}</li>;
-            })}
-          </ul>
-          <img src={singleCountry.flags.svg} alt="flag" height="100px"></img>
-        </div>
-      );
+      output = CountryDetail(singleCountry);
     }
     // no results from search
     else {
@@ -68,7 +58,7 @@ function App() {
 
   return (
     <div className="App">
-      <p>find countries</p>
+      <p>Find Countries</p>
       <input type="text" value={input} onChange={handleChange} />
       {countryList()}
     </div>
