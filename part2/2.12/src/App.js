@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import CountryDetail from "./components/CountryDetail";
+import CountryWeatherDetail from "./components/CountryWeatherDetail";
 
 function App() {
   // initialize state
@@ -68,8 +69,6 @@ function App() {
     }
   }, [filtered.length, lat, long]);
 
-  console.log(weather);
-
   // create a function to conditionally return filtered countries
   const countryList = () => {
     // initialize output
@@ -99,7 +98,7 @@ function App() {
       const country = filtered[0];
       lat = country.data.capitalInfo.latlng[0];
       long = country.data.capitalInfo.latlng[1];
-      output = CountryDetail(country, true, weather);
+      output = CountryWeatherDetail(country, weather);
     }
 
     // no results from search
