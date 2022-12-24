@@ -1,4 +1,4 @@
-const CountryDetail = (country, onlyCountry, weather) => {
+const CountryDetail = (country, onlyCountry) => {
   if (country.isVisible === false && onlyCountry === false) {
     return <p>{country.data.name.common}</p>;
   } else {
@@ -15,9 +15,6 @@ const CountryDetail = (country, onlyCountry, weather) => {
           })}
         </ul>
         <img src={country.data.flags.svg} alt="flag" height="100px"></img>
-        <h2>Weather in {country.data.capital}</h2>
-        <p>Temperature {weather.data.main.temp} Celcius</p>
-        <p>Wind {weather.data.wind.speed} m/s</p>
       </div>
     );
   }
