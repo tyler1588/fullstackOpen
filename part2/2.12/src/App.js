@@ -6,11 +6,16 @@ function App() {
   // initialize state
   const [countries, setCountries] = useState([]);
   const [input, setInput] = useState("");
-  const endpoint = "https://restcountries.com/v3.1/all";
+  const countriesEndpoint = "https://restcountries.com/v3.1/all";
+  const [weather, setWeather] = useState();
+  const [weatherEndpoint, setWeatherEndpoint] = useState(
+    "https://api.openweathermap.org/data/2.5/weather?lat=0&lon=0&units=metric&appid=" +
+      process.env.REACT_APP_API_KEY
+  );
 
-  // get countries from API
+  // get countries from countries API
   useEffect(() => {
-    axios.get(endpoint).then((res) => {
+    axios.get(countriesEndpoint).then((res) => {
       const map = res.data.map((country, i) => ({
         data: country,
         isVisible: false,
@@ -20,13 +25,19 @@ function App() {
     });
   }, []);
 
+  // get weather from weather API
+  useEffect(() => {
+    axios.get(weatherEndpoint).then((res) => {
+      setWeather(res);
+    });
+  }, [weatherEndpoint]);
+
   // handle changes to input
   function handleChange(event) {
     setInput(event.target.value);
   }
 
   // handle country button click
-
   const handleCountryClick = (event) => {
     setCountries(
       countries.map((country) =>
@@ -42,7 +53,24 @@ function App() {
     country.data.name.common.toLowerCase().includes(input.toLowerCase())
   );
 
-  // create a function to conditionally return filtered countryies
+  var lat;
+  var long;
+  useEffect(() => {
+    if (filtered.length === 1) {
+      setWeatherEndpoint(
+        "https://api.openweathermap.org/data/2.5/weather?units=metric&lat=" +
+          lat +
+          "&lon=" +
+          long +
+          "&appid=" +
+          process.env.REACT_APP_API_KEY
+      );
+    }
+  }, [filtered.length, lat, long]);
+
+  console.log(weather);
+
+  // create a function to conditionally return filtered countries
   const countryList = () => {
     // initialize output
     let output = null;
@@ -55,7 +83,7 @@ function App() {
     else if (filtered.length > 1) {
       output = filtered.map((country, i) => (
         <div key={i} style={{ display: "flex", alignItems: "center" }}>
-          {CountryDetail(country)}
+          {CountryDetail(country, false)}
           <button
             style={{ height: "20px" }}
             className={country.id}
@@ -68,9 +96,12 @@ function App() {
     }
     // return detailed information if there is only 1 country
     else if (filtered.length === 1) {
-      const singleCountry = filtered[0].data;
-      output = CountryDetail(singleCountry);
+      const country = filtered[0];
+      lat = country.data.capitalInfo.latlng[0];
+      long = country.data.capitalInfo.latlng[1];
+      output = CountryDetail(country, true, weather);
     }
+
     // no results from search
     else {
       output = <p>No results</p>;
