@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import Filter from "./components/Filter";
 import Form from "./components/Form";
 import Phonebook from "./components/Phonebook";
+import phoneService from "./services/phoneService";
 
 const App = () => {
   // initialize state
@@ -13,8 +13,8 @@ const App = () => {
 
   // get initial data from server
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => {
-      setPersons(response.data);
+    phoneService.getAll().then((initial) => {
+      setPersons(initial);
     });
   }, []);
 
@@ -26,17 +26,11 @@ const App = () => {
         return;
       }
     }
-    console.log(personObject);
-    axios
-      .post("http://localhost:3001/persons", personObject)
-      .then((response) => {
-        setPersons(persons.concat(response.data));
-        setNewName("");
-        setNewNumber("");
-      })
-      .catch((error) => {
-        console.log("fail");
-      });
+    phoneService.create(personObject).then((response) => {
+      setPersons(persons.concat(response.data));
+      setNewName("");
+      setNewNumber("");
+    });
   };
 
   const handleSubmit = (event) => {
@@ -46,8 +40,6 @@ const App = () => {
       number: newNumber,
     };
     addToArray(personObject);
-    setNewName("");
-    setNewNumber("");
   };
 
   const handleNameChange = (event) => {
