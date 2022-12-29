@@ -22,7 +22,22 @@ const App = () => {
   const addToArray = (personObject) => {
     for (let i = 0; i < persons.length; i++) {
       if (persons[i].name === personObject.name) {
-        alert(`${personObject.name} is already added to the phonebook.`);
+        if (
+          window.confirm(
+            personObject.name +
+              " is already added to the phonebook, replace the old number with a new one?"
+          )
+        ) {
+          phoneService.update(persons[i].id, personObject).then((response) => {
+            setPersons(
+              persons.map((person) =>
+                person.id !== persons[i].id ? person : response.data
+              )
+            );
+            setNewName("");
+            setNewNumber("");
+          });
+        }
         return;
       }
     }
