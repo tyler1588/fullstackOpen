@@ -10,9 +10,16 @@ const create = (newObject) => {
   return axios.post(baseUrl, newObject);
 };
 
+const deleteEntry = (id, name) => {
+  const entry = baseUrl + "/" + id;
+  const request = axios.delete(entry);
+  return request.then((response) => response.data);
+};
+
 const exportedObject = {
   getAll,
   create,
+  deleteEntry,
 };
 
 export default exportedObject;

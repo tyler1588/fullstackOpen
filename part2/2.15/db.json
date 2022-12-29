@@ -1,34 +1,19 @@
 {
   "persons": [
     {
-      "name": "Arto Hellas",
-      "number": "040-123456",
+      "name": "Tariq Pruitt",
+      "number": "202-918-2132",
       "id": 1
     },
     {
-      "name": "Ada Lovelace",
-      "number": "39-44-5323523",
+      "name": "Safiyyah Nelson",
+      "number": "505-740-1560",
       "id": 2
     },
     {
-      "name": "Dan Abramov",
-      "number": "12-43-234345",
+      "name": "Ida Hartley",
+      "number": "505-646-0381",
       "id": 3
-    },
-    {
-      "name": "Mary Poppendieck",
-      "number": "39-23-6423122",
-      "id": 4
-    },
-    {
-      "name": "John Smith",
-      "number": "040-059-3583",
-      "id": 5
-    },
-    {
-      "name": "Jack Harlow",
-      "number": "555-555-5555",
-      "id": 6
     }
   ]
 }

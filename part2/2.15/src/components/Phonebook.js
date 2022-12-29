@@ -1,4 +1,4 @@
-const Phonebook = ({ persons, filter }) => {
+const Phonebook = ({ persons, filter, handleDelete }) => {
   return (
     <ul>
       {persons
@@ -7,7 +7,12 @@ const Phonebook = ({ persons, filter }) => {
         )
         .map((person) => (
           <li key={person.id}>
-            {person.name} {person.number}
+            {person.name} {person.number}{" "}
+            {
+              <button onClick={() => handleDelete(person.id, person.name)}>
+                Delete
+              </button>
+            }
           </li>
         ))}
     </ul>
