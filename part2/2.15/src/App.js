@@ -33,33 +33,20 @@ const App = () => {
               " is already added to the phonebook, replace the old number with a new one?"
           )
         ) {
-          phoneService.update(persons[i].id, personObject).then((response) => {
-            setPersons(
-              persons.map((person) =>
-                person.id !== persons[i].id ? person : response.data
-              )
-            );
-            setNewName("");
-            setNewNumber("");
-          });
+          phoneService.update(
+            persons[i].id,
+            personObject,
+            updatePersons,
+            handleErrorMessage
+          );
         }
         return;
       }
     }
-    phoneService.create(personObject).then((response) => {
+    phoneService.create(personObject, handleErrorMessage).then((response) => {
       setPersons(persons.concat(response.data));
       setNewName("");
       setNewNumber("");
-      setErrorMessage({
-        message: "Added " + personObject.name,
-        color: "green",
-      });
-      setTimeout(() => {
-        setErrorMessage({
-          message: null,
-          color: null,
-        });
-      }, 5000);
     });
   };
 
@@ -82,6 +69,27 @@ const App = () => {
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
+  };
+
+  const updatePersons = (id, updatedPerson) => {
+    setPersons(
+      persons.map((person) =>
+        person.id !== id ? person : { ...person, number: updatedPerson.number }
+      )
+    );
+  };
+
+  const handleErrorMessage = (message, color) => {
+    setErrorMessage({
+      message: message,
+      color: color,
+    });
+    setTimeout(() => {
+      setErrorMessage({
+        message: null,
+        color: null,
+      });
+    }, 5000);
   };
 
   const handleDelete = (id, name) => {
