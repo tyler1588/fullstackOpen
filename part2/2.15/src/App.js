@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Filter from "./components/Filter";
 import Form from "./components/Form";
+import Notification from "./components/Notification";
 import Phonebook from "./components/Phonebook";
 import phoneService from "./services/phoneService";
 
@@ -10,6 +11,10 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+  const [errorMessage, setErrorMessage] = useState({
+    message: null,
+    color: null,
+  });
 
   // get initial data from server
   useEffect(() => {
@@ -45,6 +50,16 @@ const App = () => {
       setPersons(persons.concat(response.data));
       setNewName("");
       setNewNumber("");
+      setErrorMessage({
+        message: "Added " + personObject.name,
+        color: "green",
+      });
+      setTimeout(() => {
+        setErrorMessage({
+          message: null,
+          color: null,
+        });
+      }, 5000);
     });
   };
 
@@ -80,6 +95,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={errorMessage.message} color={errorMessage.color} />
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
       <h2>Add new</h2>
       <Form
