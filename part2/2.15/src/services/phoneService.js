@@ -10,6 +10,10 @@ const create = (newObject) => {
   return axios.post(baseUrl, newObject);
 };
 
+const update = (id, newObject) => {
+  return axios.put(`${baseUrl}/${id}`, newObject);
+};
+
 const deleteEntry = (id, name) => {
   const entry = baseUrl + "/" + id;
   const request = axios.delete(entry);
@@ -19,6 +23,7 @@ const deleteEntry = (id, name) => {
 const exportedObject = {
   getAll,
   create,
+  update,
   deleteEntry,
 };
 
